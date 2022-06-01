@@ -10,7 +10,12 @@
         }
     }
 
-    public void display()
+    public void MovePlayer(Player currPlayer, int cellNumber)
+    {
+        cells[cellNumber].AssignPlayer(currPlayer);
+    }
+
+    public void Display()
     {
         int cellsDrawn = 0;
         bool fillLeft = true;
@@ -18,6 +23,7 @@
         string row2Display = "";
         string row3Display = "";
         string row4Display = "";
+        string playerDisplay = "";
 
         for (int i = cells.Count; i >= 1; i--)
         {
@@ -41,14 +47,40 @@
             {
                 row1Display += "----------";
                 row2Display += ("|" + (cells[i - 1].CellNumber).ToString()).PadRight(9) + "|";
-                row3Display += "|        |";
+                
+                if (cells[i - 1].HasPlayers())
+                {
+                    foreach (Player playerInCell in cells[i - 1].PlayersInCell())
+                    {
+                        playerDisplay += playerInCell.Symbol;
+                    }
+                    row3Display += "|" + playerDisplay.PadRight(8) + "|";
+                }
+                else
+                {
+                    row3Display += "|        |";
+                } 
+                
                 row4Display += "----------";
             }
             else
             {
                 row1Display = "----------" + row1Display;
                 row2Display = ("|" + (cells[i - 1].CellNumber).ToString()).PadRight(9) + "|" + row2Display;
-                row3Display = "|        |" + row3Display;
+
+                if (cells[i - 1].HasPlayers())
+                {
+                    foreach (Player playerInCell in cells[i - 1].PlayersInCell())
+                    {
+                        playerDisplay += playerInCell.Symbol;
+                    }
+                    row3Display = "|" + playerDisplay.PadRight(8) + "|" + row3Display;
+                }
+                else
+                {
+                    row3Display = "|        |" + row3Display;
+                }
+
                 row4Display = "----------" + row4Display;
             }
 
