@@ -1,6 +1,10 @@
 ﻿internal class Board
 {
-    private List<Cell> cells = new List<Cell>();
+    private readonly List<Cell> cells = new();
+    public int BoardSize
+    {
+        get { return cells.Count; }
+    }
 
     public Board(int cellsRequired)
     {
@@ -10,9 +14,24 @@
         }
     }
 
+    public bool WinningPlayer()
+    {
+        bool winner = false;
+        if (cells[BoardSize-1].HasPlayers())
+        {
+            winner = true;
+        }
+        return winner;
+    }
+
     public void MovePlayer(Player currPlayer, int cellNumber)
     {
         cells[cellNumber].AssignPlayer(currPlayer);
+    }
+
+    public void RemovePlayer(Player currPlayer, int cellNumber)
+    {
+        cells[cellNumber].UnassignPlayer(currPlayer);
     }
 
     public void Display()
@@ -55,6 +74,7 @@
                         playerDisplay += playerInCell.Symbol;
                     }
                     row3Display += "|" + playerDisplay.PadRight(8) + "|";
+                    playerDisplay = "";
                 }
                 else
                 {
@@ -75,6 +95,7 @@
                         playerDisplay += playerInCell.Symbol;
                     }
                     row3Display = "|" + playerDisplay.PadRight(8) + "|" + row3Display;
+                    playerDisplay = "";
                 }
                 else
                 {
