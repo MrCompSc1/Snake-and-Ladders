@@ -1,6 +1,7 @@
 ﻿internal class Board
 {
     private readonly List<Cell> cells = new();
+    private readonly Random objectChance;
     public int BoardSize
     {
         get { return cells.Count; }
@@ -8,9 +9,40 @@
 
     public Board(int cellsRequired)
     {
+        objectChance = new();
+        int endCell;
+
         for (int i = 1; i <= cellsRequired; i++)
         {
             cells.Add(new Cell());
+        }
+        for (int i = 2; i <= cellsRequired-11; i++)
+        {
+            if (objectChance.Next(1, 100) <= 5)
+            {
+                endCell = objectChance.Next(i+10, cellsRequired - 1);
+
+                if (!cells[i - 1].HasObject && !cells[endCell - 1].HasObject)
+                {
+                    Ladder newLadder = new(i, endCell);
+                    cells[i - 1].PlaceObject(newLadder);
+                    cells[endCell - 1].PlaceObject(newLadder);
+                }
+            }    
+        }
+        for (int i = 11; i <= cellsRequired - 1; i++)
+        {
+            if (objectChance.Next(1, 100) <= 10)
+            {
+                endCell = objectChance.Next(0, i - 10);
+
+                if (!cells[i - 1].HasObject && !cells[endCell - 1].HasObject)
+                {
+                    Snake newSnake = new(i, endCell);
+                    cells[i - 1].PlaceObject(newSnake);
+                    cells[endCell - 1].PlaceObject(newSnake);
+                }
+            }
         }
     }
 
@@ -22,6 +54,24 @@
             winner = true;
         }
         return winner;
+    }
+
+    public int DestinationCell(int cellNumber)
+    {
+        // Might be null - need to change
+        return cells[cellNumber].PlacedObject!.EndCell-1;
+    }
+
+    public bool ObjectInCell(int cellNumber)
+    {
+        bool hasObject = false;
+
+        if (cells[cellNumber].HasObject)
+        {
+            hasObject = true;
+        }
+
+        return hasObject;
     }
 
     public void MovePlayer(Player currPlayer, int cellNumber)
@@ -65,7 +115,14 @@
             if (fillLeft)
             {
                 row1Display += "----------";
-                row2Display += ("|" + (cells[i - 1].CellNumber).ToString()).PadRight(9) + "|";
+                if (cells[i - 1].HasObject)
+                {
+                    row2Display += ("|" + (cells[i - 1].CellNumber).ToString()).PadRight(8) + cells[i - 1].PlacedObject!.BoardSymbol + "|";
+                }
+                else
+                {
+                    row2Display += ("|" + (cells[i - 1].CellNumber).ToString()).PadRight(9) + "|";
+                }
                 
                 if (cells[i - 1].HasPlayers())
                 {
@@ -86,7 +143,14 @@
             else
             {
                 row1Display = "----------" + row1Display;
-                row2Display = ("|" + (cells[i - 1].CellNumber).ToString()).PadRight(9) + "|" + row2Display;
+                if (cells[i - 1].HasObject)
+                {
+                    row2Display = ("|" + (cells[i - 1].CellNumber).ToString()).PadRight(8) + cells[i - 1].PlacedObject!.BoardSymbol + "|" + row2Display;
+                }
+                else
+                {
+                    row2Display = ("|" + (cells[i - 1].CellNumber).ToString()).PadRight(9) + "|" + row2Display;
+                }
 
                 if (cells[i - 1].HasPlayers())
                 {
