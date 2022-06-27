@@ -60,14 +60,23 @@
             {
                 gameBoard.RemovePlayer(players[currentPlayer], players[currentPlayer].Cell);
                 players[currentPlayer].Cell = players[currentPlayer].Cell + cellsToMove;
-                gameBoard.MovePlayer(players[currentPlayer], players[currentPlayer].Cell);
+                
+                if(gameBoard.ObjectInCell(players[currentPlayer].Cell))
+                {
+                    players[currentPlayer].Cell = gameBoard.DestinationCell(players[currentPlayer].Cell);
+                    gameBoard.MovePlayer(players[currentPlayer], gameBoard.DestinationCell(players[currentPlayer].Cell));
+                }
+                else
+                {
+                    gameBoard.MovePlayer(players[currentPlayer], players[currentPlayer].Cell);
+                }
             }
             else
             {
                 Console.WriteLine("Must have an exact roll, sorry!");
                 Console.ReadKey();
             }
-            
+
             Console.Clear();
             gameBoard.Display();
         } while (!gameBoard.WinningPlayer());

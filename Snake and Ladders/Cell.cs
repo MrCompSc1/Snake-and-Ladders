@@ -2,15 +2,24 @@
 {
     private static int nextCellNumber = 1;
     public int CellNumber { get; }
+    public bool HasObject { get; private set; }
     private readonly List<Player> playerList;
+    public Object? PlacedObject { get; private set; }
 
     public Cell()
     {
         CellNumber = nextCellNumber;
         nextCellNumber += 1;
         playerList = new();
+        HasObject = false;
     }
 
+    public void PlaceObject(Object newObject)
+    {
+        PlacedObject = newObject;
+        HasObject = true;
+    }
+    
     public void AssignPlayer(Player playerToAdd)
     {
         playerList.Add(playerToAdd);
