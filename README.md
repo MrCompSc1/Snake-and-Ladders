@@ -16,3 +16,6 @@ Relationship where parts of the whole are shareable as seen between:
 - Game and Player
 - Cell and Player
 - Object and Cell
+
+### Inheritance 
+Where classes are derived from a superclass. In this program, Ladder and Snake inherit from Object. 
